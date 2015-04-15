@@ -1,0 +1,4 @@
+px500_core:
+    resource: "@PX500CoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
