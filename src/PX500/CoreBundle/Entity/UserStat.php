@@ -5,12 +5,12 @@ namespace PX500\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserStats
+ * UserStat
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PX500\CoreBundle\Entity\UserStatsRepository")
+ * @ORM\Entity(repositoryClass="PX500\CoreBundle\Entity\UserStatRepository")
  */
-class UserStats
+class UserStat
 {
     /**
      * @var integer
@@ -20,6 +20,14 @@ class UserStats
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\User", inversedBy="stats")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     */
+    private $user;
 
     /**
      * @var \DateTime
@@ -57,7 +65,7 @@ class UserStats
      * Set date
      *
      * @param \DateTime $date
-     * @return UserStats
+     * @return UserStat
      */
     public function setDate($date)
     {
@@ -80,7 +88,7 @@ class UserStats
      * Set affection
      *
      * @param integer $affection
-     * @return UserStats
+     * @return UserStat
      */
     public function setAffection($affection)
     {
@@ -103,7 +111,7 @@ class UserStats
      * Set followers
      *
      * @param integer $followers
-     * @return UserStats
+     * @return UserStat
      */
     public function setFollowers($followers)
     {
@@ -120,5 +128,21 @@ class UserStats
     public function getFollowers()
     {
         return $this->followers;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace PX500\CoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,12 +37,29 @@ class User
     private $pseudo;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="photos", type="integer")
+     * @var ArrayCollection ArrayCollection of Photo
+     * @ORM\OneToMany(targetEntity="Photo", mappedBy="photo", cascade={"persist"})
+     * @ORM\OrderBy({"date" = "ASC"})
      */
     private $photos;
 
+    /**
+     * @var ArrayCollection ArrayCollection of UserStat
+     * @ORM\OneToMany(targetEntity="userStat", mappedBy="user", cascade={"persist"})
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $stats;
+
+
+
+    /**
+     * default constructor
+     */
+    public function __construct()
+    {
+        $this->photos = new ArrayCollection();
+        $this->stats = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -102,7 +120,7 @@ class User
     /**
      * Set photos
      *
-     * @param integer $photos
+     * @param array $photos
      * @return User
      */
     public function setPhotos($photos)
@@ -115,10 +133,70 @@ class User
     /**
      * Get photos
      *
-     * @return integer 
+     * @return array
      */
     public function getPhotos()
     {
         return $this->photos;
     }
+
+    /**
+     * Add a photo
+     *
+     * @param Photo $photo
+     * @return $this
+     */
+    public function addPhoto(Photo $photo)
+    {
+        $this->photos->add($photo);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getStats()
+    {
+        return $this->stats;
+    }
+
+    /**
+     * @param ArrayCollection $stats
+     */
+    public function setStats($stats)
+    {
+        $this->stats = $stats;
+    }
+
+    /**
+     * Add a stat
+     *
+     * @param UserStat $userStat
+     * @return $this
+     */
+    public function addStat(UserStat $userStat)
+    {
+        $this->stats->add($userStat);
+
+        return $this;
+    }
+
+    /**
+     * Get delay from last update
+     *
+     * @return \DateInterval
+     */
+    public function getDelayLastUpdate()
+    {
+        if (count($this->stats) > 0)
+        {
+            return (new \DateTime())->diff($this->stats->last()->getDate());
+        }
+        else
+        {
+            return (new \DateInterval('PT1D'));
+        }
+    }
+
 }

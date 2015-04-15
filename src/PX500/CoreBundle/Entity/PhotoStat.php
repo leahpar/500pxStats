@@ -5,12 +5,12 @@ namespace PX500\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PhotoStats
+ * PhotoStat
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="PX500\CoreBundle\Entity\PhotoStatsRepository")
+ * @ORM\Entity(repositoryClass="PX500\CoreBundle\Entity\PhotoStatRepository")
  */
-class PhotoStats
+class PhotoStat
 {
     /**
      * @var integer
@@ -20,6 +20,14 @@ class PhotoStats
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var Photo
+     *
+     * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\Photo", inversedBy="stats")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     */
+    private $photo;
 
     /**
      * @var \DateTime
@@ -64,7 +72,7 @@ class PhotoStats
     private $rating;
 
     /**
-     * @var integer
+     * @var \DateInterval
      */
     private $delay;
 
@@ -83,7 +91,7 @@ class PhotoStats
      * Set date
      *
      * @param \DateTime $date
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setDate($date)
     {
@@ -106,7 +114,7 @@ class PhotoStats
      * Set views
      *
      * @param integer $views
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setViews($views)
     {
@@ -129,7 +137,7 @@ class PhotoStats
      * Set likes
      *
      * @param integer $likes
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setLikes($likes)
     {
@@ -152,7 +160,7 @@ class PhotoStats
      * Set favs
      *
      * @param integer $favs
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setFavs($favs)
     {
@@ -175,7 +183,7 @@ class PhotoStats
      * Set coms
      *
      * @param integer $coms
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setComs($coms)
     {
@@ -198,7 +206,7 @@ class PhotoStats
      * Set rating
      *
      * @param string $rating
-     * @return PhotoStats
+     * @return PhotoStat
      */
     public function setRating($rating)
     {
@@ -218,25 +226,32 @@ class PhotoStats
     }
 
     /**
-     * Set delay
-     *
-     * @param integer $delay
-     * @return PhotoStats
-     */
-    public function setDelay($delay)
-    {
-        $this->delay = $delay;
-
-        return $this;
-    }
-
-    /**
      * Get delay
      *
-     * @return integer 
+     * @return \DateInterval
      */
     public function getDelay()
     {
+        if (empty($this->delay))
+        {
+            $this->delay = $this->getPhoto()->getDate()->diff($this->getDate());
+        }
         return $this->delay;
+    }
+
+    /**
+     * @return Photo
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param Photo $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
     }
 }

@@ -1,3 +1,7 @@
 px500_core_homepage:
     path:     /hello/{name}
     defaults: { _controller: PX500CoreBundle:Default:index }
+
+update_page:
+    path:     /udpate
+    defaults: { _controller: PX500CoreBundle:Default:update }
