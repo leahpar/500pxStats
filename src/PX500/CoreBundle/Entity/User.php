@@ -38,17 +38,24 @@ class User
 
     /**
      * @var ArrayCollection ArrayCollection of Photo
-     * @ORM\OneToMany(targetEntity="Photo", mappedBy="photo", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Photo", mappedBy="user", cascade={"persist"})
      * @ORM\OrderBy({"date" = "ASC"})
      */
     private $photos;
 
     /**
      * @var ArrayCollection ArrayCollection of UserStat
-     * @ORM\OneToMany(targetEntity="userStat", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="UserStat", mappedBy="user", cascade={"persist"})
      * @ORM\OrderBy({"date" = "ASC"})
      */
     private $stats;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="photos_count", type="integer")
+     */
+    private $photosCount;
 
 
 
@@ -195,8 +202,40 @@ class User
         }
         else
         {
-            return (new \DateInterval('PT1D'));
+            return (new \DateInterval('P1D'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return '[User'
+            .' uid:'.$this->uid
+            .' pseudo:'.$this->pseudo
+            .' count:'.$this->photosCount
+            .']';
+    }
+
+    /**
+     * @return int
+     */
+    public function getPhotosCount()
+    {
+        return $this->photosCount;
+    }
+
+    /**
+     * @param int $photosCount
+     *
+     * @return $this
+     */
+    public function setPhotosCount($photosCount)
+    {
+        $this->photosCount = $photosCount;
+
+        return $this;
     }
 
 }

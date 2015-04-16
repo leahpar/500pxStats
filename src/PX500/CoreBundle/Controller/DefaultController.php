@@ -33,6 +33,8 @@ class DefaultController extends Controller
         // get all users
         $users = $em->getRepository("PX500CoreBundle:User")->findAll();
 
+        //echo "<pre>";
+
         /**
          * @var User $user
          * @var Photo $photo
@@ -43,9 +45,10 @@ class DefaultController extends Controller
         foreach($users as $user)
         {
             // Update user
-            $photosCount = $user->getPhotos();
+            $photosCount = $user->getPhotosCount();
             $minFromLastUpdate = $user->getDelayLastUpdate()->format('%i');
-            $userStat = $dataService->upadteUser($user);
+            var_dump($user->getDelayLastUpdate());
+            $userStat = $dataService->updateUser($user);
             // save stat
             if ($minFromLastUpdate > 10)
             {
@@ -53,7 +56,7 @@ class DefaultController extends Controller
             }
 
             // Get new photo
-            if ($user->getPhotos() > $photosCount)
+            if ($user->getPhotosCount() > $photosCount)
             {
                 $photo = $dataService->getPhoto($user);
                 $user->addPhoto($photo);
@@ -88,6 +91,6 @@ class DefaultController extends Controller
         }
         $em->flush();
 
-        return new Response();
+        return $this->render('PX500CoreBundle:Default:index.html.twig', array('name' => "world"));
     }
 }

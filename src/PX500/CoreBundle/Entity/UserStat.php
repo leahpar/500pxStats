@@ -145,4 +145,12 @@ class UserStat
     {
         $this->user = $user;
     }
+
+    public function __toString()
+    {
+        return '[UserStat'
+            .' user:'.$this->getUser()->getPseudo()
+            .' affection:'.$this->getAffection()
+            .']';
+    }
 }

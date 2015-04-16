@@ -33,9 +33,16 @@ class Photo
     /**
      * @var integer
      *
-     * @ORM\Column(name="uid", type="integer")
+     * @ORM\Column(name="uid", type="integer", unique=true)
      */
     private $uid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
 
     /**
      * @var \DateTime
@@ -178,7 +185,7 @@ class Photo
         }
         else
         {
-            return (new \DateInterval('PT1D'));
+            return (new \DateInterval('P1D'));
         }
     }
 
@@ -227,4 +234,27 @@ class Photo
         $this->user = $user;
     }
 
+    public function __toString()
+    {
+        return '[Photo'
+            .' uid:'.$this->uid
+            .' name:'.$this->name
+            .']';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 }

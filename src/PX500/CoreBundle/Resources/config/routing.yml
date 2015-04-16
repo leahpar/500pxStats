@@ -3,5 +3,5 @@ px500_core_homepage:
     defaults: { _controller: PX500CoreBundle:Default:index }
 
 update_page:
-    path:     /udpate
+    path:     /update
     defaults: { _controller: PX500CoreBundle:Default:update }

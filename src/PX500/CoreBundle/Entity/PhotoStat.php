@@ -254,4 +254,14 @@ class PhotoStat
     {
         $this->photo = $photo;
     }
+
+    public function __toString()
+    {
+        return '[PhotoStat'
+        .' photo:'.$this->getUser()->getPseudo()
+        .' rating:'.$this->getRating()
+        .' views:'.$this->getViews()
+        .' likes:'.$this->getLikes()
+        .']';
+    }
 }

@@ -6,6 +6,7 @@ use PX500\CoreBundle\Entity\Photo;
 use PX500\CoreBundle\Entity\PhotoStat;
 use PX500\CoreBundle\Entity\User;
 use PX500\CoreBundle\Entity\UserStat;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class DataService
 {
@@ -31,6 +32,7 @@ class DataService
      */
     public function updateUser(User $user)
     {
+        $this->log("=> updateUser($user)");
         // set api url
         $url  = $this->api_url;
         $url .= '/users/show';
@@ -38,16 +40,12 @@ class DataService
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
-        $json = file_get_contents($url);
-        if ($json === null) return false;
-
-        // decode json
-        $data = json_decode($json);
-        if ($data === null) return false;
+        $data = $this->getDataFromUrl($url);
+        if ($data === false) throw new Exception("error api in updateUser");
         $userData = $data['user'];
 
         // update user
-        $user->setPhotos($userData['photos_count']);
+        $user->setPhotosCount($userData['photos_count']);
 
         // Create new user stat
         $userStat = new UserStat();
@@ -56,6 +54,7 @@ class DataService
         $userStat->setFollowers($userData['followers_count']);
         $userStat->setUser($user);
 
+        $this->log("<= updateUser() = $userStat");
         return $userStat;
     }
 
@@ -66,6 +65,8 @@ class DataService
      */
     public function getPhoto(User $user)
     {
+        $this->log("=> getPhoto($user)");
+
         // set api url
         $url  = $this->api_url;
         $url .= '/photos';
@@ -74,24 +75,19 @@ class DataService
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
-        $json = file_get_contents($url);
-        if ($json === null) return false;
-
-        // decode json
-        $data = json_decode($json);
-        if ($data === null) return false;
+        $data = $this->getDataFromUrl($url);
+        if ($data === false) throw new Exception("error api in getPhoto");
         $photoData = $data['photos'][0];
-
-        // get last photo
-        $user->setPhotos($data['photos_count']);
 
         // Create new photo
         $photo = new Photo();
         $photo->setUid($photoData['id']);
+        $photo->setName($photoData['name']);
         $photo->setUrl($photoData['image_url']);
         $photo->setDate(\DateTime::createFromFormat(\DateTime::ATOM, $photoData['created_at']));
         $photo->setUser($user);
 
+        $this->log("<= getPhoto() = $photo");
         return $photo;
     }
 
@@ -102,6 +98,7 @@ class DataService
      */
     public function getPhotoStats(Photo $photo)
     {
+        $this->log("=> getPhotoStats($photo)");
         // set api url
         $url  = $this->api_url;
         $url .= '/photos';
@@ -109,12 +106,8 @@ class DataService
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
-        $json = file_get_contents($url);
-        if ($json === null) return false;
-
-        // decode json
-        $data = json_decode($json);
-        if ($data === null) return false;
+        $data = $this->getDataFromUrl($url);
+        if ($data === false) throw new Exception("error api in getPhotoStats");
         $photoData = $data['photo'];
 
         // Create new photo stat
@@ -127,7 +120,43 @@ class DataService
         $photoStat->setLikes($photoData['votes_count']);
         $photoStat->setPhoto($photo);
 
+        $this->log("<= getPhotoStats() = $photoStat");
         return $photoStat;
+    }
+
+    /**
+     * @param $str
+     */
+    public function log($str)
+    {
+        echo (new \DateTime())->format('[i:s]').' '.$str.'<br>';
+    }
+
+
+    /**
+     * @param $url
+     * @return array
+     */
+    public function getDataFromUrl($url)
+    {
+        // camll 500px api
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // get json
+        $json = curl_exec($curl);
+        $response = curl_getinfo($curl);
+        curl_close($curl);
+
+        $this->log("$url");
+        $this->log("Result API : ".$response['http_code']);
+        if ($json === null || $response['http_code'] != 200) return false;
+
+        // decode json
+        $data = json_decode($json, true);
+
+        return $data;
     }
 }
 

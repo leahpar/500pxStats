@@ -5,4 +5,4 @@ services:
 
     service.data:
         class: PX500\CoreBundle\Services\DataService
-        arguments: ["@doctrine.orm.entity_manager", %px_api_url%, %px_api_key%]
+        arguments: [%px_api_url%, %px_api_key%]
