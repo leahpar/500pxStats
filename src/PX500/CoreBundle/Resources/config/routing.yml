@@ -18,6 +18,4 @@ photo:
 
 user:
     path:     /user/{username}
-    defaults: { _controller: PX500CoreBundle:Default:photo }
-    requirements:
-        uid: \d+
+    defaults: { _controller: PX500CoreBundle:Default:user }

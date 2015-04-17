@@ -52,4 +52,14 @@ class DefaultController extends Controller
 
         return $this->render('PX500CoreBundle:Default:photo.html.twig', array('photo' => $photo));
     }
+
+    public function userAction($username)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        // Get user
+        $user = $em->getRepository("PX500CoreBundle:User")->findOneByUsername($username);
+
+        return $this->render('PX500CoreBundle:Default:user.html.twig', array('user' => $user));
+    }
 }
