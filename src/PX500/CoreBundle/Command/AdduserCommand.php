@@ -6,6 +6,7 @@ use PX500\CoreBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -17,7 +18,7 @@ class AdduserCommand extends ContainerAwareCommand
         ->setName('px:adduser')
         ->setDescription('Update users and photos')
         ->addArgument('username', InputArgument::REQUIRED, 'user to add')
-        //->addOption('yell', null, InputOption::VALUE_NONE, 'Si définie, la tâche criera en majuscules')
+        ->addOption('photo', null, InputOption::VALUE_NONE, 'if present, get last photo')
         ;
     }
 
@@ -60,6 +61,11 @@ class AdduserCommand extends ContainerAwareCommand
             $user->setUid($userData['id']);
             $user->setUsername($userData['username']);
             $user->setPhotosCount($userData['photos_count']);
+
+            // set photos -1 so that last photo will be updated
+            if ($input->getOption('photo')) {
+                $user->setPhotosCount($userData['photos_count']-1);
+            }
 
             // Persist new user
             $em->persist($user);
