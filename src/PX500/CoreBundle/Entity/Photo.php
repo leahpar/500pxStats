@@ -167,7 +167,7 @@ class Photo
     {
         if (empty($this->delay))
         {
-            $this->delay = (new \DateTime())->diff($this->getDate());
+            $this->delay = floor((time() - $this->getDate()->format('U')) / 60);
         }
         return $this->delay;
     }
@@ -181,11 +181,11 @@ class Photo
     {
         if (count($this->stats) > 0)
         {
-            return (new \DateTime())->diff($this->stats->last()->getDate());
+            return floor((time() - $this->stats->last()->getDate()->format('U')) / 60);
         }
         else
         {
-            return (new \DateInterval('P1D'));
+            return 86400;
         }
     }
 
@@ -256,5 +256,39 @@ class Photo
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+
+    /**
+     * get the photo's actual rating
+     *
+     * @return float
+     */
+    public function getRating()
+    {
+        if (count($this->getStats()) > 0)
+        {
+            return $this->getStats()->last()->getRating();
+        }
+        else
+        {
+            return 0.0;
+        }
+    }
+
+    /**
+     * get the photo's max rating
+     *
+     * @return float
+     */
+    public function getMaxRating()
+    {
+        $rating = 0;
+        /** @var PhotoStat stat */
+        foreach ($this->getStats() as $stat)
+        {
+            $rating = max($rating, $stat->getRating());
+        }
+        return $rating;
     }
 }

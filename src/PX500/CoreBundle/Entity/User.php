@@ -198,11 +198,11 @@ class User
     {
         if (count($this->stats) > 0)
         {
-            return (new \DateTime())->diff($this->stats->last()->getDate());
+            return floor((time() - $this->stats->last()->getDate()->format('U')) / 60);
         }
         else
         {
-            return (new \DateInterval('P1D'));
+            return 86400;
         }
     }
 

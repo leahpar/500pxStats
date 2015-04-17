@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+
+{% for user in users %}
+    <h1>{{ user.pseudo }}</h1>
+
+    {% for photo in user.photos %}
+    <div>
+        <a href="{{ path('photo', {'uid':photo.uid }) }}">
+            <img src="{{ photo.url }}"/>
+        </a>
+        <span>{{ photo.name }}</span>
+        <span>{{ photo.rating }} ({{ photo.maxRating }})</span>
+    </div>
+    {% endfor %}
+
+{% endfor %}
+</body>
+</html>

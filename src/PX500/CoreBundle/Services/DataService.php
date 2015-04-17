@@ -84,7 +84,8 @@ class DataService
         $photo->setUid($photoData['id']);
         $photo->setName($photoData['name']);
         $photo->setUrl($photoData['image_url']);
-        $photo->setDate(\DateTime::createFromFormat(\DateTime::ATOM, $photoData['created_at']));
+        $date = date("Y-m-d H:i:s", strtotime($photoData['created_at'])); // convert to local time
+        $photo->setDate(\DateTime::createFromFormat("Y-m-d H:i:s", $date));
         $photo->setUser($user);
 
         $this->log("<= getPhoto() = $photo");
@@ -102,8 +103,8 @@ class DataService
         // set api url
         $url  = $this->api_url;
         $url .= '/photos';
-        $url .= '?'.$photo->getUid();
-        $url .= '&consumer_key='.$this->api_key;
+        $url .= '/'.$photo->getUid();
+        $url .= '?consumer_key='.$this->api_key;
 
         // call 500px api
         $data = $this->getDataFromUrl($url);
@@ -114,7 +115,7 @@ class DataService
         $photoStat = new PhotoStat();
         $photoStat->setDate(new \DateTime());
         $photoStat->setComs($photoData['comments_count']);
-        $photoStat->setViews($photoData['time_viewed']);
+        $photoStat->setViews($photoData['times_viewed']);
         $photoStat->setFavs($photoData['favorites_count']);
         $photoStat->setRating($photoData['rating']);
         $photoStat->setLikes($photoData['votes_count']);
@@ -129,7 +130,7 @@ class DataService
      */
     public function log($str)
     {
-        echo (new \DateTime())->format('[i:s]').' '.$str.'<br>';
+        echo (new \DateTime())->format('[H:i:s]').' '.$str.'<br>';
     }
 
 
@@ -149,7 +150,7 @@ class DataService
         $response = curl_getinfo($curl);
         curl_close($curl);
 
-        $this->log("$url");
+        //$this->log("$url");
         $this->log("Result API : ".$response['http_code']);
         if ($json === null || $response['http_code'] != 200) return false;
 

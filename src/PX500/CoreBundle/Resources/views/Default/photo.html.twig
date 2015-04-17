@@ -1,0 +1,57 @@
+{% extends "PX500CoreBundle::base.html.twig" %}
+
+{% block content %}
+<a href="https://500px.com/photo/{{ photo.uid }}">[500px link]</a><br>
+
+<div id="chart_rating" style="margin: auto; width: 1000px; height: 600px;"></div>
+<div id="chart_stats" style="margin: auto; width: 1000px; height: 600px;"></div>
+
+<script>
+    google.setOnLoadCallback(drawChart_rating);
+    function drawChart_rating() {
+        var data = google.visualization.arrayToDataTable([
+            ['min', 'note'],
+            {% for stat in photo.stats %}
+                [{{ stat.delay }},{{ stat.rating }}],
+            {% endfor %}
+        ]);
+        var options = {
+            chartArea:{
+                left:70,
+                top:50,
+                width:"80%",
+                height:"70%"},
+            vAxis:{
+                //viewWindow:{min:70},
+                type:'number'
+            }
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('chart_rating'));
+        chart.draw(data, options);
+    }
+</script>
+<script>
+    google.setOnLoadCallback(drawChart_rating);
+    function drawChart_rating() {
+        var data = google.visualization.arrayToDataTable([
+            ['min', 'views/10', 'likes', 'favs'],
+            {% for stat in photo.stats %}
+                [{{ stat.delay }},{{ stat.views//10 }}, {{ stat.likes }}, {{ stat.favs }}],
+            {% endfor %}
+        ]);
+        var options = {
+            chartArea:{
+                left:70,
+                top:50,
+                width:"80%",
+                height:"70%"},
+            vAxis:{
+                //viewWindow:{min:70},
+                type:'number'
+            }
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('chart_stats'));
+        chart.draw(data, options);
+    }
+</script>
+{% endblock content %}

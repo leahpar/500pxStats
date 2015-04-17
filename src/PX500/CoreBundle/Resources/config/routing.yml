@@ -5,3 +5,15 @@ px500_core_homepage:
 update_page:
     path:     /update
     defaults: { _controller: PX500CoreBundle:Default:update }
+
+photos:
+    path:     /photos
+    defaults: { _controller: PX500CoreBundle:Default:listPhotos }
+
+photo:
+    path:     /photo/{uid}
+    defaults: { _controller: PX500CoreBundle:Default:photo }
+    requirements:
+        uid: \d+
+
+

@@ -234,7 +234,7 @@ class PhotoStat
     {
         if (empty($this->delay))
         {
-            $this->delay = $this->getPhoto()->getDate()->diff($this->getDate());
+            $this->delay = floor(($this->getDate()->format('U') - $this->getPhoto()->getDate()->format('U')) / 60);
         }
         return $this->delay;
     }
@@ -258,7 +258,7 @@ class PhotoStat
     public function __toString()
     {
         return '[PhotoStat'
-        .' photo:'.$this->getUser()->getPseudo()
+        .' photo:'.$this->getPhoto()->getUser()->getPseudo()
         .' rating:'.$this->getRating()
         .' views:'.$this->getViews()
         .' likes:'.$this->getLikes()
