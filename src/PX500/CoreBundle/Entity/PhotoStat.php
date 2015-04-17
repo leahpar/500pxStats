@@ -65,9 +65,9 @@ class PhotoStat
     private $coms;
 
     /**
-     * @var string
+     * @var float
      *
-     * @ORM\Column(name="rating", type="decimal")
+     * @ORM\Column(name="rating", type="float")
      */
     private $rating;
 
@@ -202,28 +202,7 @@ class PhotoStat
         return $this->coms;
     }
 
-    /**
-     * Set rating
-     *
-     * @param string $rating
-     * @return PhotoStat
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
 
-        return $this;
-    }
-
-    /**
-     * Get rating
-     *
-     * @return string 
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
 
     /**
      * Get delay
@@ -263,5 +242,21 @@ class PhotoStat
         .' views:'.$this->getViews()
         .' likes:'.$this->getLikes()
         .']';
+    }
+
+    /**
+     * @return float
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param float $rating
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
     }
 }

@@ -4,7 +4,7 @@
 <body>
 
 {% for user in users %}
-    <h1>{{ user.username }}</h1>
+    <h1>{{ user.username }} <a href="{{ path('user', {'username':user.username}) }}">[>]</a></h1>
 
     {% for photo in user.photos %}
     <div>

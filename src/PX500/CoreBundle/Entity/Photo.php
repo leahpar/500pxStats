@@ -291,4 +291,55 @@ class Photo
         }
         return $rating;
     }
+
+    /**
+     * get the photo's views
+     *
+     * @return integer
+     */
+    public function getViews()
+    {
+        if (count($this->getStats()) > 0)
+        {
+            return $this->getStats()->last()->getViews();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * get the photo's favs
+     *
+     * @return integer
+     */
+    public function getFavs()
+    {
+        if (count($this->getStats()) > 0)
+        {
+            return $this->getStats()->last()->getFavs();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * get the photo's likes
+     *
+     * @return integer
+     */
+    public function getLikes()
+    {
+        if (count($this->getStats()) > 0)
+        {
+            return $this->getStats()->last()->getLikes();
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }

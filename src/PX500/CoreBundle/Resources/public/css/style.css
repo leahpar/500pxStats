@@ -1,0 +1,5 @@
+/* override materialize css */
+
+.card-photo-min a {
+    font-size: 10px;
+}

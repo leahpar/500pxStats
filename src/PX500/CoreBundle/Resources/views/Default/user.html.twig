@@ -4,18 +4,27 @@
 {% block content %}
 <h1>{{ user.username }}</h1>
 
-<div id="chart" style="margin: auto; width: 1000px; height: 600px;"></div>
+<h2>Statistiques</h2>
 
+<div class="card-panel">
+    <div id="chart" style="margin: auto; width: 100%; height: 70%;"></div>
+</div>
+
+<h2>Photos</h2>
 {% for photo in user.photos %}
-    <div>
+<div class="card card-photo-min" style="float:left; margin-right:20px">
+    <div class="card-image">
         <a href="{{ path('photo', {'uid':photo.uid }) }}">
-            <img src="{{ photo.url }}"/>
+        <img src="{{ photo.url }}"  />
         </a>
-        <span>{{ photo.name }}</span>
-        <span>{{ photo.rating }} ({{ photo.maxRating }})</span>
     </div>
+    <div class="card-content center-align">
+        {{ photo.name }}<br>
+        {{ photo.rating }} - {{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}
+    </div>
+</div>
 {% endfor %}
-
+<div style="clear:both;"></div>
 
 
 <script>
@@ -29,17 +38,18 @@ function drawChart_rating() {
     ]);
     var options = {
         chartArea:{
-            left:70,
-            top:50,
+            //left:70,
+            //top:50,
             width:"80%",
-            height:"70%"},
+            height:"80%"},
         series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 1}
         },
         vAxis:{
             //viewWindow:{min:70},
-            //type:'number',
+            type:'number',
+            format: '#,###',
             0: {title :''},
             1: {title :''}
         }
