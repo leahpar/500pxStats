@@ -1,21 +1,12 @@
-<html>
-<head>
-</head>
-<body>
+{% extends "PX500CoreBundle::base.html.twig" %}
 
+{% block content %}
 {% for user in users %}
     <h1>{{ user.username }} <a href="{{ path('user', {'username':user.username}) }}">[>]</a></h1>
 
     {% for photo in user.photos %}
-    <div>
-        <a href="{{ path('photo', {'uid':photo.uid }) }}">
-            <img src="{{ photo.url }}"/>
-        </a>
-        <span>{{ photo.name }}</span>
-        <span>{{ photo.rating }} ({{ photo.maxRating }})</span>
-    </div>
+        {% include "PX500CoreBundle:Tiles:photo-min.html.twig" with {'photo':photo} %}
     {% endfor %}
-
+    <div style="clear:both;"></div>
 {% endfor %}
-</body>
-</html>
+{% endblock content %}

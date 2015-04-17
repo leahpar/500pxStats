@@ -12,17 +12,7 @@
 
 <h2>Photos</h2>
 {% for photo in user.photos %}
-<div class="card card-photo-min" style="float:left; margin-right:20px">
-    <div class="card-image">
-        <a href="{{ path('photo', {'uid':photo.uid }) }}">
-        <img src="{{ photo.url }}"  />
-        </a>
-    </div>
-    <div class="card-content center-align">
-        {{ photo.name }}<br>
-        {{ photo.rating }} - {{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}
-    </div>
-</div>
+{% include "PX500CoreBundle:Tiles:photo-min.html.twig" with {'photo':photo} %}
 {% endfor %}
 <div style="clear:both;"></div>
 
