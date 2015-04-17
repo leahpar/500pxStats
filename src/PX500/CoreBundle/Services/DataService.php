@@ -2,6 +2,7 @@
 
 namespace PX500\CoreBundle\Services;
 
+use Doctrine\ORM\EntityManager;
 use PX500\CoreBundle\Entity\Photo;
 use PX500\CoreBundle\Entity\PhotoStat;
 use PX500\CoreBundle\Entity\User;
@@ -10,18 +11,103 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class DataService
 {
+    protected $em;
     protected $api_url;
     protected $api_key;
 
     /**
      * Constructor
+     * @param EntityManager $em
      * @param String $api_url
      * @param String $api_key
      */
-    public function __construct($api_url, $api_key)
+    public function __construct(EntityManager $em, $api_url, $api_key)
     {
+        $this->em = $em;
         $this->api_url = $api_url;
         $this->api_key = $api_key;
+    }
+
+    public function updateAll()
+    {
+        $em = $this->em;
+
+        // get all users
+        $users = $em->getRepository("PX500CoreBundle:User")->findAll();
+
+        /**
+         * @var User $user
+         * @var Photo $photo
+         * @var UserStat $userStat
+         * @var PhotoStat $photoStat
+         */
+
+        foreach($users as $user)
+        {
+            // Update user
+            $this->log("Update user");
+            $photosCount = $user->getPhotosCount();
+            $minFromLastUpdate = $user->getDelayLastUpdate();
+            $userStat = $this->updateUser($user);
+
+            $this->log("Last update $minFromLastUpdate min ago");
+
+            // save stat
+            if ($minFromLastUpdate > 10)
+            {
+                $this->log("persist stat");
+                $em->persist($userStat);
+            }
+
+            // Get new photo
+            $this->log("Check new photo");
+            if ($user->getPhotosCount() > $photosCount)
+            {
+                $this->log("Get new photo");
+                $photo = $this->getPhoto($user);
+                $user->addPhoto($photo);
+                $em->persist($photo);
+            }
+
+            // Update photos
+            $this->log("Update photos");
+            $photos = $user->getPhotos();
+            foreach ($photos as $photo)
+            {
+                $minFromUpload = $photo->getDelay();
+                $minFromLastUpdate = $photo->getDelayLastUpdate();
+                $this->log("Last update $minFromLastUpdate min ago");
+                $delay = 0;
+
+                if ($minFromUpload < 30)
+                {
+                    $delay = 1;
+                }
+                else if ($minFromUpload < 2000)
+                {
+                    $delay = 5;
+                }
+                else
+                {
+                    $delay = -1;
+                }
+
+                // time to update
+                if ($delay > 0 && $minFromLastUpdate > $delay)
+                {
+                    $this->log("Time to update");
+                    $photoStat = $this->getPhotoStats($photo);
+                    $photo->addStat($photoStat);
+                    $em->persist($photoStat);
+                }
+                else
+                {
+                    $this->log("No update");
+                }
+            }
+        }
+        $this->log("The end");
+        $em->flush();
     }
 
 
