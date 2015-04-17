@@ -42,7 +42,7 @@ class AdduserCommand extends ContainerAwareCommand
         $url .= '&consumer_key='.$dataService->api_key;
 
         // Check if user already exists
-        $user = $em->getRepository("PX500CoreBundle:User")->findOneByPseudo($username);
+        $user = $em->getRepository("PX500CoreBundle:User")->findOneByUsername($username);
         if ($user != null)
         {
             $output->writeln("User $username already exists !");
@@ -58,7 +58,7 @@ class AdduserCommand extends ContainerAwareCommand
             // Create new user
             $user = new User();
             $user->setUid($userData['id']);
-            $user->setPseudo($userData['username']);
+            $user->setUsername($userData['username']);
             $user->setPhotosCount($userData['photos_count']);
 
             // Persist new user

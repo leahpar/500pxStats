@@ -2,7 +2,7 @@ px500_core_homepage:
     path:     /hello/{name}
     defaults: { _controller: PX500CoreBundle:Default:index }
 
-update_page:
+update:
     path:     /update
     defaults: { _controller: PX500CoreBundle:Default:update }
 
@@ -16,4 +16,8 @@ photo:
     requirements:
         uid: \d+
 
-
+user:
+    path:     /user/{username}
+    defaults: { _controller: PX500CoreBundle:Default:photo }
+    requirements:
+        uid: \d+

@@ -258,7 +258,7 @@ class PhotoStat
     public function __toString()
     {
         return '[PhotoStat'
-        .' photo:'.$this->getPhoto()->getUser()->getPseudo()
+        .' photo:'.$this->getPhoto()->getUser()->getUsername()
         .' rating:'.$this->getRating()
         .' views:'.$this->getViews()
         .' likes:'.$this->getLikes()

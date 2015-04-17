@@ -149,7 +149,7 @@ class UserStat
     public function __toString()
     {
         return '[UserStat'
-            .' user:'.$this->getUser()->getPseudo()
+            .' user:'.$this->getUser()->getUsername()
             .' affection:'.$this->getAffection()
             .']';
     }

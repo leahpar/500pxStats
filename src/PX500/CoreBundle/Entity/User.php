@@ -32,9 +32,9 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="pseudo", type="string", length=255)
+     * @ORM\Column(name="username", type="string", length=255)
      */
-    private $pseudo;
+    private $username;
 
     /**
      * @var ArrayCollection ArrayCollection of Photo
@@ -99,29 +99,6 @@ class User
     public function getUid()
     {
         return $this->uid;
-    }
-
-    /**
-     * Set pseudo
-     *
-     * @param string $pseudo
-     * @return User
-     */
-    public function setPseudo($pseudo)
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
-
-    /**
-     * Get pseudo
-     *
-     * @return string 
-     */
-    public function getPseudo()
-    {
-        return $this->pseudo;
     }
 
     /**
@@ -213,7 +190,7 @@ class User
     {
         return '[User'
             .' uid:'.$this->uid
-            .' pseudo:'.$this->pseudo
+            .' username:'.$this->username
             .' count:'.$this->photosCount
             .']';
     }
@@ -236,6 +213,22 @@ class User
         $this->photosCount = $photosCount;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
     }
 
 }
