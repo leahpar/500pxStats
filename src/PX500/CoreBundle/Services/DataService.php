@@ -8,12 +8,13 @@ use PX500\CoreBundle\Entity\PhotoStat;
 use PX500\CoreBundle\Entity\User;
 use PX500\CoreBundle\Entity\UserStat;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DataService
 {
     protected $em;
-    protected $api_url;
-    protected $api_key;
+    public $api_url;
+    public $api_key;
 
     /**
      * Constructor
@@ -126,8 +127,7 @@ class DataService
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
-        $data = $this->getDataFromUrl($url);
-        if ($data === false) throw new Exception("error api in updateUser");
+        $data = $this->getDataFromUrl($url); // throws HttpException
         $userData = $data['user'];
 
         // update user
@@ -161,8 +161,7 @@ class DataService
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
-        $data = $this->getDataFromUrl($url);
-        if ($data === false) throw new Exception("error api in getPhoto");
+        $data = $this->getDataFromUrl($url); // throws HttpException
         $photoData = $data['photos'][0];
 
         // Create new photo
@@ -193,8 +192,7 @@ class DataService
         $url .= '?consumer_key='.$this->api_key;
 
         // call 500px api
-        $data = $this->getDataFromUrl($url);
-        if ($data === false) throw new Exception("error api in getPhotoStats");
+        $data = $this->getDataFromUrl($url); // throws HttpException
         $photoData = $data['photo'];
 
         // Create new photo stat
@@ -238,7 +236,14 @@ class DataService
 
         //$this->log("$url");
         $this->log("Result API : ".$response['http_code']);
-        if ($json === null || $response['http_code'] != 200) return false;
+        if ($json === null)
+        {
+            throw new HttpException(0, "invalid json");
+        }
+        elseif ($response['http_code'] != 200)
+        {
+            throw new HttpException($response['http_code'], "500px api url = [$url]");
+        }
 
         // decode json
         $data = json_decode($json, true);

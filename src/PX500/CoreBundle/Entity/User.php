@@ -25,7 +25,7 @@ class User
     /**
      * @var integer
      *
-     * @ORM\Column(name="uid", type="integer")
+     * @ORM\Column(name="uid", type="integer", unique=true)
      */
     private $uid;
 
