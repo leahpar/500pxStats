@@ -2,11 +2,13 @@
 
 {% block content %}
 {% for user in users %}
-    <h1>{{ user.username }} <a href="{{ path('user', {'username':user.username}) }}">[>]</a></h1>
-
+    <div class="card-panel">
+    <h2>{{ user.username }}</h2><a class="btn" href="{{ path('user', {'username':user.username}) }}">View stats</a>
+    <br>
     {% for photo in user.photos %}
         {% include "PX500CoreBundle:Tiles:photo-min.html.twig" with {'photo':photo} %}
     {% endfor %}
     <div style="clear:both;"></div>
+    </div>
 {% endfor %}
 {% endblock content %}

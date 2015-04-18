@@ -28,7 +28,9 @@ class DefaultController extends Controller
     public function updateAction()
     {
         $dataService = $this->get('service.data');
+        echo "<pre>";
         $dataService->updateAll();
+        echo "</pre>";
 
         return $this->render('PX500CoreBundle:Default:index.html.twig', array('name' => "world"));
     }

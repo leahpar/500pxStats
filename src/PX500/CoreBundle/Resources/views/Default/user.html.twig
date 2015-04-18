@@ -23,7 +23,7 @@ function drawChart_rating() {
     var data = google.visualization.arrayToDataTable([
         ['date', 'affection', 'followers'],
         {% for stat in user.stats %}
-        ['{{ stat.date|date('Y-m-d') }}',{{ stat.affection }}, {{ stat.followers }}],
+        [new Date('{{ stat.date|date('r') }}'),{{ stat.affection }}, {{ stat.followers }}],
         {% endfor %}
     ]);
     var options = {
@@ -35,6 +35,9 @@ function drawChart_rating() {
         series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 1}
+        },
+        hAxis:{
+            type:'datetime'
         },
         vAxis:{
             //viewWindow:{min:70},

@@ -1,3 +1,5 @@
+{# Mui card style #}
+{#
 <div class="card card-photo-min" style="width:180px; float:left; margin-right:20px">
     <div class="card-image">
         <a href="{{ path('photo', {'uid':photo.uid }) }}">
@@ -8,5 +10,20 @@
         {{ photo.name }}<br>
         {{ photo.rating }}<br>
         {{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}
+    </div>
+</div>
+#}
+
+{# 500px card style #}
+<div class="photo-card">
+    <div class="photo">
+        <a href="{{ path('photo', {'uid':photo.uid }) }}">
+            <img src="{{ photo.url }}" height="280px" width="280px" />
+            <div class="detail">
+                <div class="title">{{ photo.name }}</div>
+                <div class="info">{{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}</div>
+                <div class="rating">{{ photo.rating }}</div>
+            </div>
+        </a>
     </div>
 </div>

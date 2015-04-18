@@ -211,7 +211,7 @@ class DataService
      */
     public function log($str)
     {
-        echo (new \DateTime())->format('[H:i:s]').' '.$str.'<br>';
+        echo (new \DateTime())->format('[H:i:s]').' '.$str."\n";
     }
 
 
