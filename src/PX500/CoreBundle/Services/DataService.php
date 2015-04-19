@@ -76,7 +76,7 @@ class DataService
                     try {
                         $minFromUpload = $photo->getDelay();
                         $minFromLastUpdate = $photo->getDelayLastUpdate();
-                        $this->log("Last update $minFromLastUpdate min ago");
+                        $this->log("Last update $minFromLastUpdate min ago, uploaded $minFromUpload min ago");
                         $delay = 0;
 
                         if ($minFromUpload < 30) {

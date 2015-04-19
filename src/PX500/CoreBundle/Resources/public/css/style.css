@@ -9,13 +9,18 @@ a {
 
 /* override materialize css */
 
+.container {
+    width: 80%;
+}
+
 /* 500px style */
 
 .photo-card {
     color: #ffffff;
     width: 280px;
     height: 280px;
-    float: left;
+    /*float: left;*/
+    display: inline-block;
     padding: 0px;
     margin: 20px;
 }
@@ -88,4 +93,3 @@ a {
     opacity: 1;
     bottom: 0;
 }
-
