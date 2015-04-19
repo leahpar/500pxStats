@@ -37,6 +37,13 @@ class User
     private $username;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
      * @var ArrayCollection ArrayCollection of Photo
      * @ORM\OneToMany(targetEntity="Photo", mappedBy="user", cascade={"persist"})
      * @ORM\OrderBy({"date" = "ASC"})
@@ -229,6 +236,22 @@ class User
     public function setUsername($username)
     {
         $this->username = $username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
 }

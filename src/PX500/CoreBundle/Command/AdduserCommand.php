@@ -60,6 +60,7 @@ class AdduserCommand extends ContainerAwareCommand
             $user = new User();
             $user->setUid($userData['id']);
             $user->setUsername($userData['username']);
+            $user->setName($userData['firstname'].' '.$userData['lastname']);
             $user->setPhotosCount($userData['photos_count']);
 
             // set photos -1 so that last photo will be updated
