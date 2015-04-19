@@ -155,6 +155,7 @@ class DataService
         $url .= '/photos';
         $url .= '?feature=user';
         $url .= '&user_id='.$user->getUid();
+        $url .= '&image_size=3';
         $url .= '&consumer_key='.$this->api_key;
 
         // call 500px api
