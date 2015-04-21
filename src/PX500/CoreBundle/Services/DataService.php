@@ -61,11 +61,11 @@ class DataService
                     $em->persist($userStat);
                 }
 
-                // Get new photo
+                // Get new photo(s)
                 $this->log("Check new photo");
-                if ($user->getPhotosCount() > $photosCount) {
-                    $this->log("Get new photo");
-                    $photo = $this->getPhoto($user);
+                for ($i = $user->getPhotosCount() - $photosCount; $i > 0; $i--) {
+                    $this->log("Get new photo ($i)");
+                    $photo = $this->getPhoto($user, $i-1);
                     $user->addPhoto($photo);
                     $em->persist($photo);
                 }
@@ -143,11 +143,12 @@ class DataService
     }
 
     /**
-     * Call 500px api to get last user's photo
+     * Call 500px api to get last nth user's photo
      * @param User $user
+     * @param int $nth : last nth photo to get
      * @return new Photo, false if an error occurs
      */
-    public function getPhoto(User $user)
+    public function getPhoto(User $user, $nth = 0)
     {
         $this->log("=> getPhoto($user)");
 
@@ -161,7 +162,7 @@ class DataService
 
         // call 500px api
         $data = $this->getDataFromUrl($url); // throws HttpException
-        $photoData = $data['photos'][0];
+        $photoData = $data['photos'][$nth];
 
         // Create new photo
         $photo = new Photo();
