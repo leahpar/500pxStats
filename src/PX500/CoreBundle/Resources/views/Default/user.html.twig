@@ -11,7 +11,7 @@
 </div>
 
 <h2>Photos</h2>
-{% for photo in user.photos %}
+{% for photo in user.photos|reverse %}
 {% include "PX500CoreBundle:Tiles:photo-min.html.twig" with {'photo':photo} %}
 {% endfor %}
 <div style="clear:both;"></div>
