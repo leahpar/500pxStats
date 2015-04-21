@@ -25,7 +25,7 @@ class PhotoStat
      * @var Photo
      *
      * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\Photo", inversedBy="stats")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $photo;
 

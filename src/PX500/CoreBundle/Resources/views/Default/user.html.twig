@@ -20,19 +20,30 @@
 <script>
 google.setOnLoadCallback(drawChart_rating);
 function drawChart_rating() {
-    var data = google.visualization.arrayToDataTable([
-        ['date', 'affection', 'followers'],
-        {% for stat in user.stats %}
-        [new Date('{{ stat.date|date('r') }}'),{{ stat.affection }}, {{ stat.followers }}],
-        {% endfor %}
-    ]);
+    var data = new google.visualization.DataTable();
+    data.addColumn('datetime', 'Date');
+    data.addColumn('number', 'affection');
+    data.addColumn('string', 'photo title');
+
+    {% for stat in user.stats %}
+        {% if stat.photo is null %}
+            data.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '']);
+        {% else %}
+            data.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '{{ stat.photo.name }}']);
+        {%  endif %}
+    {% endfor %}
+
     var options = {
+        dateFormat: 'dd/MM HH:mm',
+        nomberFormats: '#,##0',
+        scaleFormats: '#,##0',
         chartArea:{
             //left:70,
             //top:50,
             width:"80%",
-            height:"80%"},
-        series: {
+            height:"80%"
+        },
+/*        series: {
             0: {targetAxisIndex: 0},
             1: {targetAxisIndex: 1}
         },
@@ -46,8 +57,9 @@ function drawChart_rating() {
             0: {title :''},
             1: {title :''}
         }
+*/
     };
-    var chart = new google.visualization.LineChart(document.getElementById('chart'));
+    var chart = new google.visualization.AnnotationChart(document.getElementById('chart'));
     chart.draw(data, options);
 }
 </script>

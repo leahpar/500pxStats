@@ -25,9 +25,18 @@ class UserStat
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\User", inversedBy="stats")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
+
+    /**
+     * @var Photo
+     * Photo added by that UserStat
+     *
+     * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\Photo")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $photo;
 
     /**
      * @var \DateTime
@@ -152,5 +161,21 @@ class UserStat
             .' user:'.$this->getUser()->getUsername()
             .' affection:'.$this->getAffection()
             .']';
+    }
+
+    /**
+     * @return Photo
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param Photo $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
     }
 }

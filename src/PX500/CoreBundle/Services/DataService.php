@@ -67,6 +67,8 @@ class DataService
                     $this->log("Get new photo ($i)");
                     $photo = $this->getPhoto($user, $i-1);
                     $user->addPhoto($photo);
+                    $userStat->setPhoto($photo);
+                    $em->persist($userStat); // if not already persisted before
                     $em->persist($photo);
                 }
 
