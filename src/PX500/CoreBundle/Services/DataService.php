@@ -3,12 +3,13 @@
 namespace PX500\CoreBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 use PX500\CoreBundle\Entity\Photo;
 use PX500\CoreBundle\Entity\PhotoStat;
 use PX500\CoreBundle\Entity\User;
 use PX500\CoreBundle\Entity\UserStat;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class DataService
 {
@@ -248,5 +249,81 @@ class DataService
 
         return $data;
     }
-}
 
+    /**
+     * Clean data in DB : add missing attributes
+     * @param $cleanUsers : clean User table ?
+     * @param $cleanPhotos : clean Photo table ?
+     */
+    public function cleandb($cleanUsers, $cleanPhotos)
+    {
+        $em = $this->em;
+
+        if ($cleanUsers) {
+            // get all users
+            $users = $em->getRepository("PX500CoreBundle:User")->findAll();
+            /** @var User $user */
+            foreach ($users as $user) {
+
+                // If some user's attribute is empty, update it
+                $update = false;
+                if (empty($user->getUsername())
+                    || empty($user->getName())
+                    || empty($user->getPhotosCount())) {
+
+                    try {
+                        // set api url
+                        $url = $this->api_url;
+                        $url .= '/users/show';
+                        $url .= '?id=' . $user->getUid();
+                        $url .= '&consumer_key=' . $this->api_key;
+
+                        // call 500px api
+                        $data = $this->getDataFromUrl($url); // throws HttpException
+                        $userData = $data['user'];
+
+                        // update user
+                        $user->setUsername($userData['username']);
+                        $user->setPhotosCount($userData['photos_count']);
+                        $user->setName($userData['firstname'] . ' ' . $userData['lastname']);
+                    } catch (HttpException $e) {
+                        // TODO : handle exception
+                    }
+                }
+            }
+            $em->flush();
+        }
+
+        if ($cleanPhotos) {
+            // get all photos
+            $photos = $em->getRepository("PX500CoreBundle:Photo")->findAll();
+            /** @var Photo $photo */
+            foreach ($photos as $photo) {
+
+                // If some photo's attribute is emtpy, update it
+                if (empty($photo->getName()) || empty($photo->getUrl())) {
+
+                    try {
+                        // set api url
+                        $url = $this->api_url;
+                        $url .= '/photos';
+                        $url .= '/' . $photo->getUid();
+                        $url .= '?image_size=3';
+                        $url .= '&consumer_key=' . $this->api_key;
+
+                        // call 500px api
+                        $data = $this->getDataFromUrl($url); // throws HttpException
+                        $photoData = $data['photo'];
+
+                        // update photo
+                        $photo->setName($photoData['name']);
+                        $photo->setUrl($photoData['image_url']);
+                    } catch (HttpException $e) {
+                        // TODO : handle exception
+                    }
+                }
+            }
+            $em->flush();
+        }
+    }
+}
