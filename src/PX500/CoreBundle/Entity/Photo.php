@@ -237,8 +237,9 @@ class Photo
     public function __toString()
     {
         return '[Photo'
+            .' ('.$this->id.')'
             .' uid:'.$this->uid
-            .' name:'.$this->name
+            .' upload:'.$this->date->format('Y-m-d H:i:s')
             .']';
     }
 

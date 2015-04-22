@@ -3,6 +3,8 @@
 namespace PX500\CoreBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * PhotoRepository
@@ -12,4 +14,78 @@ use Doctrine\ORM\EntityRepository;
  */
 class PhotoRepository extends EntityRepository
 {
+    /**
+     * Return photos which are not already referenced in UserStat
+     * @param User $user
+     * @return array of Photo
+     */
+    public function findNotReferencedByUserStat(User $user) {
+
+        /*
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('p')
+            ->from('PX500CoreBundle:Photo', 'p')
+            ->where('p.user = :user')
+            ->andWhere('s.photo IS NULL') // <= left excluding join
+            ->leftJoin('PX500CoreBundle:UserStat', 's')
+            ->setParameter('user', $user)
+            ->orderBy('p.date', 'asc')
+        ;
+        echo $qb->getQuery()->getSQL()."\n";
+        return $qb->getQuery()->getResult();
+        */
+
+        /*
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('s.photo')
+            ->from('PX500CoreBundle:UserStat', 's')
+            ->where('s.user = :user')
+            ->andWhere('s.photo IS NOT NULL')
+            ->setParameter('user', $user)
+        ;
+        echo $qb->getQuery()->getSQL()."\n";
+        return $qb->getQuery()->getResult();
+        */
+
+        /*
+        $str  = 'SELECT p';
+        $str .= ' FROM PX500CoreBundle:Photo p';
+        $str .= ' WHERE p.user = :user';
+        $str .= ' AND p NOT IN (';
+        $str .= '  SELECT s.photo';
+        $str .= '  FROM PX500CoreBundle:UserStat s';
+        $str .= '  WHERE s.user = :user';
+        $str .= ' )';
+        echo "$str\n";
+
+        $query = $em->createQuery($str);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+        */
+
+        // ------------------------------------------------------
+
+        // PUTAIN DE DQL DE MERDE DE MES COUILLES !
+        // Use some fucking SQL, it just works !
+        // Sorry...
+
+        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm->addRootEntityFromClassMetadata('PX500CoreBundle:Photo', 'p');
+
+        $str  = 'SELECT p.*';
+        $str .= ' FROM Photo p';
+        $str .= ' WHERE p.user_id = ?';
+        $str .= ' AND p.id NOT IN (';
+        $str .= '  SELECT s.photo_id';
+        $str .= '  FROM UserStat s';
+        $str .= '  WHERE s.photo_id IS NOT NULL)';
+        //echo "$str\n";
+
+        $query = $this->_em->createNativeQuery($str, $rsm);
+        $query->setParameter(1, $user->getId());
+
+        return $query->getResult();
+
+    }
 }

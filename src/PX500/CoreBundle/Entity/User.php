@@ -196,6 +196,7 @@ class User
     public function __toString()
     {
         return '[User'
+            .' ('.$this->id.')'
             .' uid:'.$this->uid
             .' username:'.$this->username
             .' count:'.$this->photosCount

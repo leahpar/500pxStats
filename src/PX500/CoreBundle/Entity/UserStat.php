@@ -159,6 +159,7 @@ class UserStat
     {
         return '[UserStat'
             .' user:'.$this->getUser()->getUsername()
+            .' date:'.$this->getDate()->format('Y-m-d H:i:s')
             .' affection:'.$this->getAffection()
             .']';
     }

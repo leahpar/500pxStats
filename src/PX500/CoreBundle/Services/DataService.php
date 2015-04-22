@@ -351,7 +351,44 @@ class DataService
             // if date(A) < upload photo P < date(B)
             // then add photo P to stat A
 
-            // TODO
+            // get all users
+            $users = $em->getRepository("PX500CoreBundle:User")->findAll();
+
+            /** @var User $user */
+            foreach ($users as $user) {
+//echo "$user\n";
+                // User's photos which are not already referenced
+                // Photos are sorted by date asc
+                $i = 0;
+                $photos = $em->getRepository("PX500CoreBundle:Photo")->findNotReferencedByUserStat($user);
+
+                // if user does't have any photo
+                if (count($photos) == 0) {
+//echo "no photo\n";
+                    continue; // next user
+                }
+//echo "$i $photos[$i]\n";
+                /** @var UserStat $stat */
+                // Stats are sorted by date asc
+                foreach ($user->getStats() as $stat) {
+//echo "$stat\n";
+                    if ($photos[$i]->getDate() < $stat->getDate()
+                        && $stat->getPhoto() == null) {
+
+                        // add current photo to stat
+                        $stat->setPhoto($photos[$i]);
+                        $em->persist($stat);
+//echo "add (".$photos[$i]->getid().") to stat\n";
+                        // next photo
+                        $i++;
+
+                        // no more photo, next user
+                        if ($i == count($photos)) break;
+//echo "$i $photos[$i]\n";
+                    }
+                }
+            }
+            $em->flush();
         }
 
         if ($cleanStats) {
