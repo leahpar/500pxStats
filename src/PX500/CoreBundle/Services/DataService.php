@@ -254,15 +254,17 @@ class DataService
     }
 
     /**
-     * Clean data in DB : add missing attributes
-     * @param $cleanUsers : clean User table ?
-     * @param $cleanPhotos : clean Photo table ?
+     * Update data in DB : add missing attributes
+     * @param $updateUsers : update User table
+     * @param $updatePhotos : update Photo table
+     * @param $updateStats : udpate UserStat table (add new photo information)
+     * @param $cleanStats : remove useless stats rows (same consecutive values)
      */
-    public function cleandb($cleanUsers, $cleanPhotos)
+    public function updatedb($updateUsers, $updatePhotos, $updateStats, $cleanStats)
     {
         $em = $this->em;
 
-        if ($cleanUsers) {
+        if ($updateUsers) {
             // get all users
             $users = $em->getRepository("PX500CoreBundle:User")->findAll();
             /** @var User $user */
@@ -297,7 +299,7 @@ class DataService
             $em->flush();
         }
 
-        if ($cleanPhotos) {
+        if ($updatePhotos) {
             // get all photos
             $photos = $em->getRepository("PX500CoreBundle:Photo")->findAll();
             /** @var Photo $photo */
@@ -327,6 +329,22 @@ class DataService
                 }
             }
             $em->flush();
+        }
+
+        if ($updateStats) {
+            // Stats A, B
+            // if date(A) < upload photo P < date(B)
+            // then add photo P to stat A
+
+            // TODO
+        }
+
+        if ($cleanStats) {
+            // Stats A, B, C
+            // if value(A) == value(B) == value(C)
+            // then remove B
+
+            // TODO
         }
     }
 }
