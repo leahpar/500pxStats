@@ -46,6 +46,8 @@ class DataService
 
         foreach($users as $user)
         {
+            $em = $this->em;
+
             try {
                 // Update user
                 $this->log("Update user");
@@ -66,10 +68,22 @@ class DataService
                 for ($i = $user->getPhotosCount() - $photosCount; $i > 0; $i--) {
                     $this->log("Get new photo ($i)");
                     $photo = $this->getPhoto($user, $i-1);
-                    $user->addPhoto($photo);
-                    $userStat->setPhoto($photo);
-                    $em->persist($userStat); // if not already persisted before
-                    $em->persist($photo);
+
+                    // check if photo already exists
+                    $photo2 = $em->getRepository("PX500CoreBundle:Photo")->findOneByUid($photo->getUid());
+                    if ($photo2 == null) {
+
+                        // add photo upload date to user stat
+                        $userStat->setPhoto($photo);
+                        $em->persist($userStat);
+
+                        // persist photo
+                        $user->addPhoto($photo);
+                        $em->persist($photo);
+                    }
+                    else {
+                        $this->log("Photo ".$photo->getUid()." already exists !");
+                    }
                 }
 
                 // Update photos
@@ -96,7 +110,8 @@ class DataService
                             $photoStat = $this->getPhotoStats($photo);
                             $photo->addStat($photoStat);
                             $em->persist($photoStat);
-                        } else {
+                        }
+                        else {
                             $this->log("No update");
                         }
                     } catch (HttpException $e) {
