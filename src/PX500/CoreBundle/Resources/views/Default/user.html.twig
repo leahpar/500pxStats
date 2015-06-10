@@ -7,7 +7,8 @@
 <h2>Statistiques</h2>
 
 <div class="card-panel">
-    <div id="chart" style="margin: auto; width: 100%; height: 70%;"></div>
+    <div id="chart_affection" style="margin: auto; width: 100%; height: 70%;"></div>
+    <div id="chart_followers" style="margin: auto; width: 100%; height: 70%;"></div>
 </div>
 
 <h2>Photos</h2>
@@ -18,18 +19,27 @@
 
 
 <script>
-google.setOnLoadCallback(drawChart_rating);
-function drawChart_rating() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('datetime', 'Date');
-    data.addColumn('number', 'affection');
-    data.addColumn('string', 'photo title');
+google.setOnLoadCallback(drawCharts);
+
+function drawCharts() {
+    var data_affection = new google.visualization.DataTable();
+    var data_followers = new google.visualization.DataTable();
+
+    data_affection.addColumn('datetime', 'Date');
+    data_affection.addColumn('number', 'affection');
+    data_affection.addColumn('string', 'photo title');
+
+    data_followers.addColumn('datetime', 'Date');
+    data_followers.addColumn('number', 'followers');
+    data_followers.addColumn('string', 'photo title');
 
     {% for stat in user.stats %}
         {% if stat.photo is null %}
-            data.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '']);
+            data_affection.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '']);
+            data_followers.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.followers }} , '']);
         {% else %}
-            data.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '{{ stat.photo.name }}']);
+            data_affection.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.affection }} , '{{ stat.photo.name }}']);
+            data_followers.addRow([new Date('{{ stat.date|date('r') }}'), {{ stat.followers }} , '{{ stat.photo.name }}']);
         {%  endif %}
     {% endfor %}
 
@@ -43,24 +53,15 @@ function drawChart_rating() {
             width:"80%",
             height:"80%"
         },
-/*        series: {
-            0: {targetAxisIndex: 0},
-            1: {targetAxisIndex: 1}
-        },
-        hAxis:{
-            type:'datetime'
-        },
-        vAxis:{
-            //viewWindow:{min:70},
-            type:'number',
-            format: '#,###',
-            0: {title :''},
-            1: {title :''}
-        }
-*/
     };
-    var chart = new google.visualization.AnnotationChart(document.getElementById('chart'));
-    chart.draw(data, options);
+
+    // Make charts
+    var chart_affection = new google.visualization.AnnotationChart(document.getElementById('chart_affection'));
+    var chart_followers = new google.visualization.AnnotationChart(document.getElementById('chart_followers'));
+
+    // Draw charts
+    chart_affection.draw(data_affection, options);
+    chart_followers.draw(data_followers, options);
 }
 </script>
 
