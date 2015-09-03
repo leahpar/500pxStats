@@ -26,7 +26,7 @@ class Photo
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\User", inversedBy="photos")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $user;
 

@@ -34,7 +34,7 @@ class UserStat
      * Photo added by that UserStat
      *
      * @ORM\ManyToOne(targetEntity="PX500\CoreBundle\Entity\Photo")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $photo;
 
