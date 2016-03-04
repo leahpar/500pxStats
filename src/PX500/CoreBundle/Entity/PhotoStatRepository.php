@@ -3,6 +3,8 @@
 namespace PX500\CoreBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * PhotoStatRepository
@@ -12,4 +14,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class PhotoStatRepository extends EntityRepository
 {
+
+    /**
+     * Return minutes from last update of the Photo
+     * @param Photo $photo
+     * @return array
+     */
+    public function getDelayLastUpdate(Photo $photo)
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('time', 'time');
+
+        $query = $this->_em->createNativeQuery("
+            select (UNIX_TIMESTAMP() - coalesce(UNIX_TIMESTAMP(MAX(s.date)), 0))/60 as time
+            from PhotoStat s
+            where s.photo_id = ".$photo->getId(),
+            $rsm
+        );
+
+        return $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
+    }
 }

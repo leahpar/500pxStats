@@ -173,23 +173,6 @@ class Photo
     }
 
     /**
-     * Get delay from last update
-     *
-     * @return \DateInterval
-     */
-    public function getDelayLastUpdate()
-    {
-        if (count($this->stats) > 0)
-        {
-            return floor((time() - $this->stats->last()->getDate()->format('U')) / 60);
-        }
-        else
-        {
-            return 86400;
-        }
-    }
-
-    /**
      * @return ArrayCollection
      */
     public function getStats()

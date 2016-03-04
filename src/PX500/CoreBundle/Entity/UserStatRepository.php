@@ -3,6 +3,8 @@
 namespace PX500\CoreBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * UserStatRepository
@@ -12,4 +14,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserStatRepository extends EntityRepository
 {
+
+    /**
+     * Return minutes from last update of the User
+     * @param User $user
+     * @return array
+     */
+    public function getDelayLastUpdate(User $user)
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('time', 'time');
+
+        $query = $this->_em->createNativeQuery("
+            select (UNIX_TIMESTAMP() - coalesce(UNIX_TIMESTAMP(MAX(s.date)), 0))/60 as time
+            from UserStat s
+            where s.user_id = ".$user->getId(),
+            $rsm
+        );
+
+        return $query->getResult(Query::HYDRATE_SINGLE_SCALAR);
+    }
 }
