@@ -9,7 +9,7 @@
     <div class="card-content center-align">
         {{ photo.name }}<br>
         {{ photo.rating }}<br>
-        {{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}
+        {{ photo.views }} / {{ photo.likes }}
     </div>
 </div>
 #}
@@ -21,7 +21,7 @@
             <img src="{{ photo.url }}" height="280px" width="280px" />
             <div class="detail">
                 <div class="title">{{ photo.name }}</div>
-                <div class="info">{{ photo.views }} / {{ photo.likes }} / {{ photo.favs }}</div>
+                <div class="info">{{ photo.views }} / {{ photo.likes }}</div>
                 <div class="rating">{{ photo.rating }}</div>
             </div>
         </a>

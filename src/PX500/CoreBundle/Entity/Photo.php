@@ -311,23 +311,6 @@ class Photo
     }
 
     /**
-     * get the photo's favs
-     *
-     * @return integer
-     */
-    public function getFavs()
-    {
-        if (count($this->getStats()) > 0)
-        {
-            return $this->getStats()->last()->getFavs();
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    /**
      * get the photo's likes
      *
      * @return integer

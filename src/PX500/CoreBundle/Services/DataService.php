@@ -217,7 +217,6 @@ class DataService
         $photoStat->setDate(new \DateTime());
         $photoStat->setComs($photoData['comments_count']);
         $photoStat->setViews($photoData['times_viewed']);
-        $photoStat->setFavs($photoData['favorites_count']);
         $photoStat->setRating($photoData['rating']);
         $photoStat->setLikes($photoData['votes_count']);
         $photoStat->setPhoto($photo);

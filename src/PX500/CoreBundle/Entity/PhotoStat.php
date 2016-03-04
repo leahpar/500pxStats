@@ -53,13 +53,6 @@ class PhotoStat
     /**
      * @var integer
      *
-     * @ORM\Column(name="favs", type="integer")
-     */
-    private $favs;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="coms", type="integer")
      */
     private $coms;
@@ -154,29 +147,6 @@ class PhotoStat
     public function getLikes()
     {
         return $this->likes;
-    }
-
-    /**
-     * Set favs
-     *
-     * @param integer $favs
-     * @return PhotoStat
-     */
-    public function setFavs($favs)
-    {
-        $this->favs = $favs;
-
-        return $this;
-    }
-
-    /**
-     * Get favs
-     *
-     * @return integer 
-     */
-    public function getFavs()
-    {
-        return $this->favs;
     }
 
     /**

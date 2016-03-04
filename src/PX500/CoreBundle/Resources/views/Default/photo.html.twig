@@ -38,9 +38,9 @@
     google.setOnLoadCallback(drawChart_rating);
     function drawChart_rating() {
         var data = google.visualization.arrayToDataTable([
-            ['min', 'views/10', 'likes', 'favs'],
+            ['min', 'views/10', 'likes'],
             {% for stat in photo.stats %}
-                [{{ stat.delay }},{{ stat.views//10 }}, {{ stat.likes }}, {{ stat.favs }}],
+                [{{ stat.delay }},{{ stat.views//10 }}, {{ stat.likes }}],
             {% endfor %}
         ]);
         var options = {
